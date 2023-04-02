@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class RecipeResponse(
     @SerializedName("pk")
-    val pk: Int?,
+    val pk: Int,
     @SerializedName("title")
     val title: String?,
     @SerializedName("publisher")
@@ -22,11 +22,11 @@ data class RecipeResponse(
     @SerializedName("ingredients")
     val ingredients: List<String>?,
     @SerializedName("date_added")
-    val dateAdded: String?,
+    val dateAddedString: String?,
     @SerializedName("date_updated")
-    val dateUpdated: String?,
+    val dateUpdatedString: String?,
     @SerializedName("long_date_added")
-    val longDateAdded: Long?,
+    val dateAdded: Long?,
     @SerializedName("long_date_updated")
-    val longDateUpdated: Long?
+    val dateUpdated: Long?
 )
