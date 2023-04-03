@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import pl.birski.mvvmrecipeapp.BaseApplication
+import pl.birski.mvvmrecipeapp.ui.BaseApplication
 import javax.inject.Singleton
 
 @Module
@@ -16,8 +16,4 @@ object AppModule {
     @Singleton
     @Provides
     fun provideApplication(@ApplicationContext app: Context) = app as BaseApplication
-
-    @Singleton
-    @Provides
-    fun provideRandomString() = "asdasdadfdfgyuy"
 }

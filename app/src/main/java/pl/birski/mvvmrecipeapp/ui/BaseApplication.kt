@@ -1,4 +1,4 @@
-package pl.birski.mvvmrecipeapp
+package pl.birski.mvvmrecipeapp.ui
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
