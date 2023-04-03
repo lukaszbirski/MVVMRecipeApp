@@ -1,10 +1,10 @@
 package pl.birski.mvvmrecipeapp.domain.mapper
 
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
-import pl.birski.mvvmrecipeapp.network.model.RecipeResponse
+import pl.birski.mvvmrecipeapp.network.model.RecipeDTO
 import java.util.Date
 
-fun RecipeResponse.toDomain() = Recipe(
+fun RecipeDTO.toDomain() = Recipe(
     id = this.pk,
     title = this.title.orEmpty(),
     publisher = this.publisher.orEmpty(),

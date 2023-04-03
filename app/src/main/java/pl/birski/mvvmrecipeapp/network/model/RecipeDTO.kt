@@ -2,7 +2,7 @@ package pl.birski.mvvmrecipeapp.network.model
 
 import com.google.gson.annotations.SerializedName
 
-data class RecipeResponse(
+data class RecipeDTO(
     @SerializedName("pk")
     val pk: Int,
     @SerializedName("title")
