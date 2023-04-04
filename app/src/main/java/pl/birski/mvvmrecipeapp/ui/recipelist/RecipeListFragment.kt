@@ -1,6 +1,7 @@
 package pl.birski.mvvmrecipeapp.ui.recipelist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pl.birski.mvvmrecipeapp.R
 import pl.birski.mvvmrecipeapp.ui.theme.MVVMRecipeAppTheme
+import pl.birski.mvvmrecipeapp.util.TAG
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
@@ -33,6 +35,8 @@ class RecipeListFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+                val recipes = viewModel.recipes.value
+                Log.d(TAG, "onCreateView: ${recipes.size}")
                 RecipeListScreen()
             }
         }
