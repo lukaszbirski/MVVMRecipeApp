@@ -1,13 +1,14 @@
 package pl.birski.mvvmrecipeapp.ui.recipelist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +21,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pl.birski.mvvmrecipeapp.R
+import pl.birski.mvvmrecipeapp.ui.components.RecipeCard
 import pl.birski.mvvmrecipeapp.ui.theme.MVVMRecipeAppTheme
-import pl.birski.mvvmrecipeapp.util.TAG
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
@@ -36,8 +37,13 @@ class RecipeListFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val recipes = viewModel.recipes.value
-                Log.d(TAG, "onCreateView: ${recipes.size}")
-                RecipeListScreen()
+                LazyColumn {
+                    itemsIndexed(
+                        items = recipes
+                    ) { _, recipe ->
+                        RecipeCard(recipe = recipe, onClick = {})
+                    }
+                }
             }
         }
     }
