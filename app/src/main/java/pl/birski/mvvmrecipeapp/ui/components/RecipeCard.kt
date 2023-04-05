@@ -18,9 +18,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import pl.birski.mvvmrecipeapp.R
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun RecipeCard(
     recipe: Recipe,
@@ -38,16 +41,16 @@ fun RecipeCard(
         elevation = 8.dp
     ) {
         Column {
-            recipe.featuredImage?.let {
-                Image(
-                    painter = painterResource(id = R.drawable.empty_plate),
-                    contentDescription = stringResource(id = R.string.recipe_card_text),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(225.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            Image(
+                painter = recipe.featuredImage?.let {
+                    rememberImagePainter(it)
+                } ?: painterResource(id = R.drawable.empty_plate),
+                contentDescription = stringResource(id = R.string.recipe_card_text),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(225.dp),
+                contentScale = ContentScale.Crop
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
