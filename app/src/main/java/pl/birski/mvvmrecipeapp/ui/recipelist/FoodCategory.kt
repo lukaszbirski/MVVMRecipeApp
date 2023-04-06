@@ -17,4 +17,5 @@ enum class FoodCategory(@StringRes val value: Int) {
 
 fun getAllFoodCategories() = FoodCategory.values().toList()
 
-// fun getFoodCategory(value: String) = FoodCategory.values().find { it.value == value }
+fun getFoodCategory(value: String) =
+    FoodCategory.values().find { it.name.lowercase() == value.lowercase() }

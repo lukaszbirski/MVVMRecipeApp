@@ -54,6 +54,7 @@ class RecipeListFragment : Fragment() {
             setContent {
                 val recipes = viewModel.recipes.value
                 val query = viewModel.query.value
+                val selectedCategory = viewModel.selectedCategory.value
                 val keyboardController = LocalSoftwareKeyboardController.current
                 Column {
                     Surface(
@@ -78,7 +79,7 @@ class RecipeListFragment : Fragment() {
                                     ),
                                     keyboardActions = KeyboardActions(
                                         onDone = {
-                                            viewModel.newSearch(query)
+                                            viewModel.newSearch()
                                             keyboardController?.hide()
                                         }
                                     ),
@@ -98,14 +99,15 @@ class RecipeListFragment : Fragment() {
                                 modifier = Modifier
                                     .horizontalScroll(rememberScrollState())
                                     .fillMaxWidth()
-                                    .padding(bottom = 8.dp)
+                                    .padding(bottom = 8.dp, start = 8.dp)
                             ) {
                                 for (category in getAllFoodCategories()) {
                                     FoodCategoryChip(
                                         category = stringResource(id = category.value),
-                                        onExecuteSearch = {
-                                            viewModel.onQueryChanged(it)
-                                            viewModel.newSearch(it)
+                                        isSelected = selectedCategory == category,
+                                        onExecuteSearch = viewModel::newSearch,
+                                        oSelectCategoryChanged = {
+                                            viewModel.onSelectedCategoryChanged(it)
                                         }
                                     )
                                 }
