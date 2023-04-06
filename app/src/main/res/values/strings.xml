@@ -2,4 +2,13 @@
     <string name="app_name">MVVMRecipeApp</string>
     <string name="recipe_card_text">RecipeCard</string>
     <string name="search_text">Search</string>
+    <string name="chicken_text">Chicken</string>
+    <string name="beef_text">Beef</string>
+    <string name="soup_text">Soup</string>
+    <string name="dessert_text">Dessert</string>
+    <string name="vegetarian_text">Vegetarian</string>
+    <string name="milk_text">Milk</string>
+    <string name="vegan_text">Vegan</string>
+    <string name="pizza_text">Pizza</string>
+    <string name="donut_text">Donut</string>
 </resources>
