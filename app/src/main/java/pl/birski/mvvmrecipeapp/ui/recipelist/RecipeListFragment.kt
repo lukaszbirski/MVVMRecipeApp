@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,6 +38,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import pl.birski.mvvmrecipeapp.R
+import pl.birski.mvvmrecipeapp.ui.components.CircularProgressBar
 import pl.birski.mvvmrecipeapp.ui.components.FoodCategoryChip
 import pl.birski.mvvmrecipeapp.ui.components.RecipeCard
 
@@ -56,6 +59,7 @@ class RecipeListFragment : Fragment() {
                 val query = viewModel.query.value
                 val selectedCategory = viewModel.selectedCategory.value
                 val keyboardController = LocalSoftwareKeyboardController.current
+                val loading = viewModel.loading.value
                 Column {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -114,12 +118,17 @@ class RecipeListFragment : Fragment() {
                             }
                         }
                     }
-                    LazyColumn {
-                        itemsIndexed(
-                            items = recipes
-                        ) { _, recipe ->
-                            RecipeCard(recipe = recipe, onClick = {})
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        LazyColumn {
+                            itemsIndexed(
+                                items = recipes
+                            ) { _, recipe ->
+                                RecipeCard(recipe = recipe, onClick = {})
+                            }
                         }
+                        CircularProgressBar(isDisplayed = loading)
                     }
                 }
             }
