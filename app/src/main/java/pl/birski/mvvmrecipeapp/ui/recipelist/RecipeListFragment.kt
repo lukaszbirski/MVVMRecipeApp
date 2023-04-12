@@ -41,6 +41,7 @@ import pl.birski.mvvmrecipeapp.R
 import pl.birski.mvvmrecipeapp.ui.components.CircularProgressBar
 import pl.birski.mvvmrecipeapp.ui.components.FoodCategoryChip
 import pl.birski.mvvmrecipeapp.ui.components.RecipeCard
+import pl.birski.mvvmrecipeapp.ui.components.ShimmerRecipeCard
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
@@ -121,11 +122,19 @@ class RecipeListFragment : Fragment() {
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        LazyColumn {
-                            itemsIndexed(
-                                items = recipes
-                            ) { _, recipe ->
-                                RecipeCard(recipe = recipe, onClick = {})
+                        if (loading) {
+                            LazyColumn {
+                                items(10) {
+                                    ShimmerRecipeCard(imageHeight = 250.dp)
+                                }
+                            }
+                        } else {
+                            LazyColumn {
+                                itemsIndexed(
+                                    items = recipes
+                                ) { _, recipe ->
+                                    RecipeCard(recipe = recipe, onClick = {})
+                                }
                             }
                         }
                         CircularProgressBar(isDisplayed = loading)
