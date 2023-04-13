@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import pl.birski.mvvmrecipeapp.ui.theme.MVVMRecipeAppTheme
+import pl.birski.mvvmrecipeapp.ui.theme.AppTheme
 
 @AndroidEntryPoint
 class RecipeFragment : Fragment() {
@@ -44,7 +44,7 @@ class RecipeFragment : Fragment() {
     @Preview(showBackground = true)
     @Composable
     fun RecipePreview() {
-        MVVMRecipeAppTheme {
+        AppTheme {
             RecipeScreen()
         }
     }

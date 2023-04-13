@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.repository.RecipeRepository
@@ -33,7 +32,6 @@ class RecipeListViewModel @Inject constructor(
         viewModelScope.launch {
             loading.value = true
             resetStateSearch()
-            delay(10000)
             val result = repository.search(page = 1, query = query.value)
             recipes.value = result
             loading.value = false

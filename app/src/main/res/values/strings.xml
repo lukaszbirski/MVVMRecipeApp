@@ -2,6 +2,7 @@
     <string name="app_name">MVVMRecipeApp</string>
     <string name="recipe_card_text">RecipeCard</string>
     <string name="search_text">Search</string>
+    <string name="theme_text">Change theme</string>
     <string name="chicken_text">Chicken</string>
     <string name="beef_text">Beef</string>
     <string name="soup_text">Soup</string>

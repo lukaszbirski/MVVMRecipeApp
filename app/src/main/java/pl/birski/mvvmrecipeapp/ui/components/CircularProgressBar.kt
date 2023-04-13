@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import pl.birski.mvvmrecipeapp.ui.theme.MVVMRecipeAppTheme
+import pl.birski.mvvmrecipeapp.ui.theme.AppTheme
 
 @Composable
 fun CircularProgressBar(
@@ -33,7 +33,7 @@ fun CircularProgressBar(
 @Preview(showBackground = true)
 @Composable
 fun CircularProgressBarPreview() {
-    MVVMRecipeAppTheme {
+    AppTheme {
         CircularProgressBar(true)
     }
 }
