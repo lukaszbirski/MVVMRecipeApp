@@ -73,6 +73,8 @@ class RecipeListFragment : Fragment() {
                     val selectedCategory = viewModel.selectedCategory.value
                     val keyboardController = LocalSoftwareKeyboardController.current
                     val loading = viewModel.loading.value
+                    val page = viewModel.page.value
+
                     Column {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
@@ -153,7 +155,7 @@ class RecipeListFragment : Fragment() {
                             modifier = Modifier.fillMaxSize()
                                 .background(color = MaterialTheme.colors.background)
                         ) {
-                            if (loading) {
+                            if (loading && recipes.isEmpty()) {
                                 LazyColumn {
                                     items(SHIMMERING_RECIPE_LIST_SIZE) {
                                         ShimmerRecipeCard(imageHeight = 250.dp)
@@ -163,7 +165,11 @@ class RecipeListFragment : Fragment() {
                                 LazyColumn {
                                     itemsIndexed(
                                         items = recipes
-                                    ) { _, recipe ->
+                                    ) { index, recipe ->
+                                        viewModel.onChangeRecipeScrollPosition(index)
+                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                                            viewModel.nextPage()
+                                        }
                                         RecipeCard(recipe = recipe, onClick = {})
                                     }
                                 }

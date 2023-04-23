@@ -10,6 +10,8 @@ import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.repository.RecipeRepository
 import javax.inject.Inject
 
+const val PAGE_SIZE = 30
+
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
     private val repository: RecipeRepository
@@ -19,6 +21,8 @@ class RecipeListViewModel @Inject constructor(
     val query = mutableStateOf("")
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     val loading = mutableStateOf(false)
+    val page = mutableStateOf(1)
+    private var recipeListScrollPosition = 0
 
     init {
         newSearch()
@@ -38,6 +42,34 @@ class RecipeListViewModel @Inject constructor(
         }
     }
 
+    fun nextPage() {
+        viewModelScope.launch {
+            if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+                loading.value = true
+                incrementPage()
+                if (page.value > 1) {
+                    val result = repository.search(page = page.value, query = query.value)
+                    appendRecipes(result)
+                }
+                loading.value = false
+            }
+        }
+    }
+
+    fun onChangeRecipeScrollPosition(position: Int) {
+        recipeListScrollPosition = position
+    }
+
+    private fun appendRecipes(recipes: List<Recipe>) {
+        val current = ArrayList(this.recipes.value)
+        current.addAll(recipes)
+        this.recipes.value = current
+    }
+
+    private fun incrementPage() {
+        page.value = page.value + 1
+    }
+
     fun onSelectedCategoryChanged(category: String) {
         val newCategory = getFoodCategory(category)
         selectedCategory.value = newCategory
@@ -50,6 +82,8 @@ class RecipeListViewModel @Inject constructor(
 
     private fun resetStateSearch() {
         recipes.value = listOf()
+        page.value = 1
+        onChangeRecipeScrollPosition(0)
         if (selectedCategory.value?.name?.lowercase() != query.value.lowercase()) {
             clearSelectedCategory()
         }
