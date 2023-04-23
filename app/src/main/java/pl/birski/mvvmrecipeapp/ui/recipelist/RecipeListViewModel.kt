@@ -1,5 +1,6 @@
 package pl.birski.mvvmrecipeapp.ui.recipelist
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.repository.RecipeRepository
+import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
 
 const val PAGE_SIZE = 30
@@ -25,34 +27,43 @@ class RecipeListViewModel @Inject constructor(
     private var recipeListScrollPosition = 0
 
     init {
-        newSearch()
+        onTriggerEvent(RecipeListEvent.NewSearchEvent)
+    }
+
+    fun onTriggerEvent(event: RecipeListEvent) {
+        viewModelScope.launch {
+            try {
+                when (event) {
+                    RecipeListEvent.NewSearchEvent -> newSearch()
+                    RecipeListEvent.NextPageEvent -> nextPage()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "onTriggerEvent: Exception: $e, ${e.cause}")
+            }
+        }
     }
 
     fun onQueryChanged(query: String) {
         this.query.value = query
     }
 
-    fun newSearch() {
-        viewModelScope.launch {
-            loading.value = true
-            resetStateSearch()
-            val result = repository.search(page = 1, query = query.value)
-            recipes.value = result
-            loading.value = false
-        }
+    private suspend fun newSearch() {
+        loading.value = true
+        resetStateSearch()
+        val result = repository.search(page = 1, query = query.value)
+        recipes.value = result
+        loading.value = false
     }
 
-    fun nextPage() {
-        viewModelScope.launch {
-            if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
-                loading.value = true
-                incrementPage()
-                if (page.value > 1) {
-                    val result = repository.search(page = page.value, query = query.value)
-                    appendRecipes(result)
-                }
-                loading.value = false
+    private suspend fun nextPage() {
+        if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+            loading.value = true
+            incrementPage()
+            if (page.value > 1) {
+                val result = repository.search(page = page.value, query = query.value)
+                appendRecipes(result)
             }
+            loading.value = false
         }
     }
 
