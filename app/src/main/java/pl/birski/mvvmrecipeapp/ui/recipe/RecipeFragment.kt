@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,15 @@ class RecipeFragment : Fragment() {
 
     private val viewModel: RecipeViewModel by viewModels()
 
+    private var recipeId: Int = -1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getInt("recipeId")?.let { recipeId ->
+            this.recipeId = recipeId
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,7 +47,10 @@ class RecipeFragment : Fragment() {
     @Composable
     fun RecipeScreen() {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Recipe Fragment")
+            Text(
+                text = "Selected recipeId: $recipeId",
+                style = MaterialTheme.typography.h5
+            )
         }
     }
 
