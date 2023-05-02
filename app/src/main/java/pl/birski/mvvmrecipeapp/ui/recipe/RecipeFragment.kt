@@ -23,12 +23,10 @@ class RecipeFragment : Fragment() {
 
     private val viewModel: RecipeViewModel by viewModels()
 
-    private var recipeId: Int = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("recipeId")?.let { recipeId ->
-            this.recipeId = recipeId
+            viewModel.onTriggerEvent(RecipeEvent.GetRecipeEvent(recipeId))
         }
     }
 
@@ -46,9 +44,11 @@ class RecipeFragment : Fragment() {
 
     @Composable
     fun RecipeScreen() {
+        val loading = viewModel.loading.value
+        val recipe = viewModel.recipe.value
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Selected recipeId: $recipeId",
+                text = recipe?.let { recipe.title } ?: "Loading...",
                 style = MaterialTheme.typography.h5
             )
         }
