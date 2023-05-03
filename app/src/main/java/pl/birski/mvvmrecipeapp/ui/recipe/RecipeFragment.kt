@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import pl.birski.mvvmrecipeapp.ui.BaseApplication
-import pl.birski.mvvmrecipeapp.ui.components.CircularProgressBar
 import pl.birski.mvvmrecipeapp.ui.components.RecipeView
 import pl.birski.mvvmrecipeapp.ui.components.ShimmerRecipeDetails
 import pl.birski.mvvmrecipeapp.ui.theme.AppTheme
@@ -61,7 +60,8 @@ class RecipeFragment : Fragment() {
         val scrollState = rememberScrollState()
 
         AppTheme(
-            darkTheme = application.isDark.value
+            darkTheme = application.isDark.value,
+            displayProgressBar = loading
         ) {
             Scaffold(
                 scaffoldState = scaffoldState,
@@ -83,7 +83,6 @@ class RecipeFragment : Fragment() {
                             )
                         }
                     }
-                    CircularProgressBar(isDisplayed = loading)
                 }
             }
         }
@@ -92,7 +91,7 @@ class RecipeFragment : Fragment() {
     @Preview(showBackground = true)
     @Composable
     fun RecipePreview() {
-        AppTheme {
+        AppTheme(displayProgressBar = true) {
             RecipeScreen()
         }
     }

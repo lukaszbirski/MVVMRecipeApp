@@ -60,6 +60,5 @@ fun RecipeList(
                 }
             }
         }
-        CircularProgressBar(isDisplayed = loading)
     }
 }
