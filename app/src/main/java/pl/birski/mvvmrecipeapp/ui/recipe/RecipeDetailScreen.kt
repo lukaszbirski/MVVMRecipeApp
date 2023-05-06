@@ -25,6 +25,14 @@ fun RecipeDetailScreen(
     val scaffoldState = rememberScaffoldState()
     val scrollState = rememberScrollState()
 
+    recipeId?.let { id ->
+        val onLoad = viewModel.onLoad.value
+        if (!onLoad) {
+            viewModel.onLoad.value = true
+            viewModel.onTriggerEvent(RecipeDetailEvent.GetRecipeDetailEvent(id))
+        }
+    }
+
     AppTheme(
         darkTheme = isDarkTheme,
         displayProgressBar = loading

@@ -23,18 +23,19 @@ class RecipeViewModel @Inject constructor(
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
     val loading = mutableStateOf(false)
+    val onLoad = mutableStateOf(false)
 
     init {
         savedStateHandle.get<Int>(STATE_KEY_RECIPE)?.let {
-            onTriggerEvent(RecipeEvent.GetRecipeEvent(it))
+            onTriggerEvent(RecipeDetailEvent.GetRecipeDetailEvent(it))
         }
     }
 
-    fun onTriggerEvent(event: RecipeEvent) {
+    fun onTriggerEvent(event: RecipeDetailEvent) {
         viewModelScope.launch {
             try {
                 when (event) {
-                    is RecipeEvent.GetRecipeEvent -> {
+                    is RecipeDetailEvent.GetRecipeDetailEvent -> {
                         if (recipe.value == null) {
                             getRecipe(event.id)
                         }
