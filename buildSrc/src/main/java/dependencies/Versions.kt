@@ -25,7 +25,7 @@ object Versions {
     const val compose = "1.5.0-alpha03"
     const val hilt_lifecycle_viewmodel = "1.0.0-alpha03"
     const val nav_component = "2.5.3"
-    const val nav_compose = "1.0.0-alpha06"
+    const val nav_compose = "2.5.3"
     const val hilt_navigation = "1.1.0-alpha02"
     const val glide = "4.11.0"
     const val retrofit = "2.9.0"
@@ -40,4 +40,5 @@ object Versions {
     const val hilt_lifecycle = "1.0.0"
     const val lifecycle_runtime_ktx = "2.6.1"
     const val activity_compose = "1.7.1"
+    const val hilt_navigation_compose = "1.0.0"
 }

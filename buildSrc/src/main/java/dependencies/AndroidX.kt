@@ -43,4 +43,5 @@ object AndroidX {
         "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle_runtime_ktx}"
 
     const val activity_compose = "androidx.activity:activity-compose:${Versions.activity_compose}"
+    const val hilt_navigation_compose = "androidx.hilt:hilt-navigation-compose:${Versions.hilt_navigation_compose}"
 }
