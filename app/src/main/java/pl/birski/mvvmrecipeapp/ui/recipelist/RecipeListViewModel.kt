@@ -10,10 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.repository.RecipeRepository
+import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
 
-const val PAGE_SIZE = 30
 const val STATE_KEY_PAGE = "recipe.state.page.key"
 const val STATE_KEY_QUERY = "recipe.state.query.key"
 const val STATE_KEY_LIST_POSITION = "recipe.state.query.list_position"
@@ -86,7 +86,7 @@ class RecipeListViewModel @Inject constructor(
     }
 
     private suspend fun nextPage() {
-        if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+        if ((recipeListScrollPosition + 1) >= (page.value * RECIPE_PAGINATION_PAGE_SIZE)) {
             loading.value = true
             incrementPage()
             if (page.value > 1) {
