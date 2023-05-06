@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import pl.birski.mvvmrecipeapp.R
+import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.ui.components.FoodCategoryChip
 import pl.birski.mvvmrecipeapp.ui.components.RecipeList
 import pl.birski.mvvmrecipeapp.ui.theme.AppTheme
@@ -39,6 +40,7 @@ import pl.birski.mvvmrecipeapp.ui.theme.AppTheme
 fun RecipeListScreen(
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    onNavigateToRecipeDetailScreen: (Recipe) -> Unit,
     viewModel: RecipeListViewModel
 ) {
     AppTheme(darkTheme = isDarkTheme, displayProgressBar = viewModel.loading.value) {
@@ -131,9 +133,7 @@ fun RecipeListScreen(
                 onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                 onNextPage = viewModel::onTriggerEvent,
                 page = page,
-                onNavigateToRecipeDetailScreen = {
-                    // TODO @lukasz navigate to detail screen
-                }
+                onNavigateToRecipeDetailScreen = onNavigateToRecipeDetailScreen
             )
         }
     }

@@ -1,8 +1,17 @@
 package pl.birski.mvvmrecipeapp.ui.navigation
 
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 sealed class Screen(
-    val route: String
+    val route: String,
+    val arguments: List<NamedNavArgument>
 ) {
-    object RecipeList : Screen("recipeList")
-    object RecipeDetail : Screen("recipeDetail")
+    object RecipeList : Screen(route = "recipeList", arguments = emptyList())
+
+    object RecipeDetail : Screen(
+        route = "recipeDetail",
+        arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+    )
 }
