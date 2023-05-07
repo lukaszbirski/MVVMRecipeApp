@@ -6,27 +6,19 @@ data class RecipeDTO(
     @SerializedName("pk")
     val pk: Int,
     @SerializedName("title")
-    val title: String?,
+    val title: String,
     @SerializedName("publisher")
-    val publisher: String?,
+    val publisher: String,
     @SerializedName("featured_image")
-    val featuredImage: String?,
+    val featuredImage: String,
     @SerializedName("rating")
-    val rating: Int?,
+    val rating: Int = 0,
     @SerializedName("source_url")
-    val sourceUrl: String?,
-    @SerializedName("description")
-    val description: String?,
-    @SerializedName("cooking_instructions")
-    val cookingInstructions: String?,
+    val sourceUrl: String,
     @SerializedName("ingredients")
-    val ingredients: List<String>?,
-    @SerializedName("date_added")
-    val dateAddedString: String?,
-    @SerializedName("date_updated")
-    val dateUpdatedString: String?,
+    var ingredients: List<String> = emptyList(),
     @SerializedName("long_date_added")
-    val dateAdded: Long?,
+    var longDateAdded: Long,
     @SerializedName("long_date_updated")
-    val dateUpdated: Long?
+    var longDateUpdated: Long
 )

@@ -1,19 +1,43 @@
 package pl.birski.mvvmrecipeapp.domain.mapper
 
+import pl.birski.mvvmrecipeapp.cache.model.RecipeEntity
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.network.model.RecipeDTO
-import java.util.Date
+import pl.birski.mvvmrecipeapp.util.DateUtil
 
 fun RecipeDTO.toDomain() = Recipe(
     id = this.pk,
-    title = this.title.orEmpty(),
-    publisher = this.publisher.orEmpty(),
+    title = this.title,
+    publisher = this.publisher,
     featuredImage = this.featuredImage,
-    rating = this.rating ?: 0,
-    sourceUrl = this.sourceUrl.orEmpty(),
-    description = this.description.orEmpty(),
-    cookingInstructions = this.cookingInstructions.orEmpty(),
-    ingredients = this.ingredients?.map { it } ?: emptyList(),
-    dateAdded = this.dateAdded?.let { Date(it) },
-    dateUpdated = this.dateUpdated?.let { Date(it) }
+    rating = this.rating,
+    sourceUrl = this.sourceUrl,
+    ingredients = this.ingredients.map { it },
+    dateAdded = DateUtil.longToDate(this.longDateAdded),
+    dateUpdated = DateUtil.longToDate(this.longDateUpdated)
+)
+
+fun RecipeEntity.toDomain() = Recipe(
+    id = this.id,
+    title = this.title,
+    publisher = this.publisher,
+    featuredImage = this.featuredImage,
+    rating = this.rating,
+    sourceUrl = this.sourceUrl,
+    ingredients = this.ingredients,
+    dateAdded = this.dateAdded,
+    dateUpdated = this.dateUpdated
+)
+
+fun Recipe.toRecipeEntity() = RecipeEntity(
+    id = this.id,
+    title = this.title,
+    publisher = this.publisher,
+    featuredImage = this.featuredImage,
+    rating = this.rating,
+    sourceUrl = this.sourceUrl,
+    ingredients = this.ingredients,
+    dateAdded = this.dateAdded,
+    dateUpdated = this.dateUpdated,
+    dateCached = DateUtil.createTimestamp()
 )

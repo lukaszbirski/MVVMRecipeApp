@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
-import pl.birski.mvvmrecipeapp.ui.recipelist.PAGE_SIZE
 import pl.birski.mvvmrecipeapp.ui.recipelist.RecipeListEvent
+import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 
 private const val SHIMMERING_RECIPE_LIST_SIZE = 10
 
@@ -41,7 +41,7 @@ fun RecipeList(
                     items = recipes
                 ) { index, recipe ->
                     onChangeRecipeScrollPosition(index)
-                    if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                    if ((index + 1) >= (page * RECIPE_PAGINATION_PAGE_SIZE) && !loading) {
                         onNextPage(RecipeListEvent.NextPageEvent)
                     }
                     RecipeCard(

@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
@@ -37,9 +36,7 @@ fun RecipeView(
             .verticalScroll(scrollState)
     ) {
         Image(
-            painter = recipe.featuredImage?.let {
-                rememberImagePainter(it)
-            } ?: painterResource(id = R.drawable.empty_plate),
+            painter = rememberImagePainter(recipe.featuredImage),
             contentDescription = stringResource(id = R.string.recipe_view_text),
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,6 +91,8 @@ fun RecipeView(
 }
 
 @Composable
-private fun getUpdatedText(recipe: Recipe) = recipe.dateUpdated?.let {
-    stringResource(R.string.updated_text, DateUtil.dateToSlashText(it), recipe.publisher)
-} ?: stringResource(R.string.update_by_text, recipe.publisher)
+private fun getUpdatedText(recipe: Recipe) = stringResource(
+    R.string.updated_text,
+    DateUtil.dateToSlashText(recipe.dateUpdated),
+    recipe.publisher
+)

@@ -3,57 +3,39 @@ package pl.birski.mvvmrecipeapp.cache.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity(tableName = "recipes")
 data class RecipeEntity(
-    // Value from API
+
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
-    var id: Int,
+    val id: Int,
 
-    // Value from API
     @ColumnInfo(name = "title")
-    var title: String,
+    val title: String,
 
-    // Value from API
     @ColumnInfo(name = "publisher")
-    var publisher: String,
+    val publisher: String,
 
-    // Value from API
     @ColumnInfo(name = "featured_image")
-    var featuredImage: String,
+    val featuredImage: String,
 
-    // Value from API
     @ColumnInfo(name = "rating")
-    var rating: Int,
+    val rating: Int,
 
-    // Value from API
     @ColumnInfo(name = "source_url")
-    var sourceUrl: String,
+    val sourceUrl: String,
 
-    /**
-     * Value from API
-     * Comma separated list of ingredients
-     * EX: "carrots, cabbage, chicken,"
-     */
     @ColumnInfo(name = "ingredients")
-    var ingredients: String = "",
+    val ingredients: List<String>,
 
-    /**
-     * Value from API
-     */
     @ColumnInfo(name = "date_added")
-    var dateAdded: Long,
+    val dateAdded: Date,
 
-    /**
-     * Value from API
-     */
     @ColumnInfo(name = "date_updated")
-    var dateUpdated: Long,
+    val dateUpdated: Date,
 
-    /**
-     * The date this recipe was "refreshed" in the cache.
-     */
     @ColumnInfo(name = "date_cached")
-    var dateCached: Long
+    val dateCached: Date
 )
