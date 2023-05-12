@@ -7,8 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
+import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipeUseCase
 import pl.birski.mvvmrecipeapp.repository.RecipeRepository
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 import pl.birski.mvvmrecipeapp.util.TAG
@@ -22,7 +25,8 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
     private val repository: RecipeRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val searchRecipeUseCase: SearchRecipeUseCase
 ) : ViewModel() {
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
@@ -77,23 +81,35 @@ class RecipeListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun newSearch() {
-        loading.value = true
+    private fun newSearch() {
         resetStateSearch()
-        val result = repository.search(page = 1, query = query.value)
-        recipes.value = result
-        loading.value = false
+        searchRecipeUseCase.execute(page = page.value, query = query.value).onEach {
+            loading.value = it.loading
+            it.data?.let { list ->
+                recipes.value = list
+            }
+            it.error?.let { error ->
+                Log.e(TAG, "newSearch: $error")
+                // todo @lukasz handle error
+            }
+        }.launchIn(viewModelScope)
     }
 
-    private suspend fun nextPage() {
+    private fun nextPage() {
         if ((recipeListScrollPosition + 1) >= (page.value * RECIPE_PAGINATION_PAGE_SIZE)) {
-            loading.value = true
             incrementPage()
             if (page.value > 1) {
-                val result = repository.search(page = page.value, query = query.value)
-                appendRecipes(result)
+                searchRecipeUseCase.execute(page = page.value, query = query.value).onEach {
+                    loading.value = it.loading
+                    it.data?.let { list ->
+                        appendRecipes(list)
+                    }
+                    it.error?.let { error ->
+                        Log.e(TAG, "nextPage: $error")
+                        // todo @lukasz handle error
+                    }
+                }.launchIn(viewModelScope)
             }
-            loading.value = false
         }
     }
 
