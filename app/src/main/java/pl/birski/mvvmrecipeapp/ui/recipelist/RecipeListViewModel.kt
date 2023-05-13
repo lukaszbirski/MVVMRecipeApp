@@ -83,7 +83,9 @@ class RecipeListViewModel @Inject constructor(
 
     private fun newSearch() {
         resetStateSearch()
-        searchRecipeUseCase.execute(page = page.value, query = query.value).onEach {
+        searchRecipeUseCase.invoke(
+            SearchRecipeUseCase.Params(page = page.value, query = query.value)
+        ).onEach {
             loading.value = it.loading
             it.data?.let { list ->
                 recipes.value = list
@@ -99,7 +101,9 @@ class RecipeListViewModel @Inject constructor(
         if ((recipeListScrollPosition + 1) >= (page.value * RECIPE_PAGINATION_PAGE_SIZE)) {
             incrementPage()
             if (page.value > 1) {
-                searchRecipeUseCase.execute(page = page.value, query = query.value).onEach {
+                searchRecipeUseCase.invoke(
+                    SearchRecipeUseCase.Params(page = page.value, query = query.value)
+                ).onEach {
                     loading.value = it.loading
                     it.data?.let { list ->
                         appendRecipes(list)
