@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
+import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
 import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipeUseCase
-import pl.birski.mvvmrecipeapp.repository.RecipeRepository
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
@@ -24,9 +24,9 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
-    private val repository: RecipeRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val searchRecipeUseCase: SearchRecipeUseCase
+    private val searchRecipeUseCase: SearchRecipeUseCase,
+    private val restoreRecipeUseCase: RestoreRecipeUseCase
 ) : ViewModel() {
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
@@ -68,17 +68,19 @@ class RecipeListViewModel @Inject constructor(
         setQuery(query)
     }
 
-    private suspend fun restoreState() {
-        loading.value = true
-        val results: MutableList<Recipe> = mutableListOf()
-        for (p in 1..page.value) {
-            val result = repository.search(page = p, query = query.value)
-            results.addAll(result)
-            if (p == page.value) {
-                recipes.value = results
-                loading.value = false
+    private fun restoreState() {
+        restoreRecipeUseCase.invoke(
+            RestoreRecipeUseCase.Params(page = page.value, query = query.value)
+        ).onEach {
+            loading.value = it.loading
+            it.data?.let { list ->
+                recipes.value = list
             }
-        }
+            it.error?.let { error ->
+                Log.e(TAG, "newSearch: $error")
+                // todo @lukasz handle error
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun newSearch() {
