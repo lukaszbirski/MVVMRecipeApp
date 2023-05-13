@@ -7,9 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
-import pl.birski.mvvmrecipeapp.repository.RecipeRepository
+import pl.birski.mvvmrecipeapp.interactor.recipedetails.GetRecipeUseCase
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
 
@@ -17,8 +19,8 @@ const val STATE_KEY_RECIPE = "recipe.state.key.selected_recipeId"
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
-    private val repository: RecipeRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val getRecipeUseCase: GetRecipeUseCase
 ) : ViewModel() {
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
@@ -47,11 +49,17 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRecipe(id: Int) {
-        loading.value = true
-        val recipe = repository.get(id)
-        this.recipe.value = recipe
-        savedStateHandle[STATE_KEY_RECIPE] = recipe.id
-        loading.value = false
+    private fun getRecipe(id: Int) {
+        getRecipeUseCase.invoke(GetRecipeUseCase.Params(recipeId = id)).onEach {
+            loading.value = it.loading
+            it.data?.let { recipe ->
+                this.recipe.value = recipe
+                savedStateHandle[STATE_KEY_RECIPE] = recipe.id
+            }
+            it.error?.let { error ->
+                Log.e(TAG, "getRecipe: $error")
+                // todo @lukasz handle error
+            }
+        }.launchIn(viewModelScope)
     }
 }
