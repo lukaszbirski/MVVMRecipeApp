@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
 import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipeUseCase
+import pl.birski.mvvmrecipeapp.ui.util.DialogQueue
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
@@ -34,6 +35,7 @@ class RecipeListViewModel @Inject constructor(
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     val loading = mutableStateOf(false)
     val page = mutableStateOf(1)
+    val dialogQueue = DialogQueue()
     private var recipeListScrollPosition = 0
 
     init {
@@ -77,8 +79,8 @@ class RecipeListViewModel @Inject constructor(
                 recipes.value = list
             }
             it.error?.let { error ->
-                Log.e(TAG, "newSearch: $error")
-                // todo @lukasz handle error
+                dialogQueue.appendErrorMessage("Error", error)
+                Log.e(TAG, "restoreState: $error")
             }
         }.launchIn(viewModelScope)
     }
@@ -93,8 +95,8 @@ class RecipeListViewModel @Inject constructor(
                 recipes.value = list
             }
             it.error?.let { error ->
+                dialogQueue.appendErrorMessage("Error", error)
                 Log.e(TAG, "newSearch: $error")
-                // todo @lukasz handle error
             }
         }.launchIn(viewModelScope)
     }

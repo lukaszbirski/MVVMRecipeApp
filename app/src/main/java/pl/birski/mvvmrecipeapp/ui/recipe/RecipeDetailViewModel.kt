@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.recipedetails.GetRecipeUseCase
+import pl.birski.mvvmrecipeapp.ui.util.DialogQueue
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class RecipeViewModel @Inject constructor(
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
     val loading = mutableStateOf(false)
     val onLoad = mutableStateOf(false)
+    val dialogQueue = DialogQueue()
 
     init {
         savedStateHandle.get<Int>(STATE_KEY_RECIPE)?.let {
@@ -57,8 +59,8 @@ class RecipeViewModel @Inject constructor(
                 savedStateHandle[STATE_KEY_RECIPE] = recipe.id
             }
             it.error?.let { error ->
+                dialogQueue.appendErrorMessage("Error", error)
                 Log.e(TAG, "getRecipe: $error")
-                // todo @lukasz handle error
             }
         }.launchIn(viewModelScope)
     }

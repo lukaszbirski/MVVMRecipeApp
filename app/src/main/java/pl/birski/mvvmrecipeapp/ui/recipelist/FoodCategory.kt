@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import pl.birski.mvvmrecipeapp.R
 
 enum class FoodCategory(@StringRes val value: Int) {
+    ERROR(R.string.error_text),
     CHICKEN(R.string.chicken_text),
     BEEF(R.string.beef_text),
     SOUP(R.string.soup_text),

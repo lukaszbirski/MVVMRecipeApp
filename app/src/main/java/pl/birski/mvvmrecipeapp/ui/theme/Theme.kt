@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import pl.birski.mvvmrecipeapp.ui.components.CircularProgressBar
+import pl.birski.mvvmrecipeapp.ui.components.GenericDialog
+import pl.birski.mvvmrecipeapp.ui.components.GenericDialogInfo
+import java.util.Queue
 
 private val LightThemeColors = lightColors(
     primary = Blue600,
@@ -44,6 +47,7 @@ private val DarkThemeColors = darkColors(
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     displayProgressBar: Boolean,
+    dialogQueue: Queue<GenericDialogInfo>,
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
@@ -64,6 +68,24 @@ fun AppTheme(
         ) {
             content()
             CircularProgressBar(isDisplayed = displayProgressBar, 0.3f)
+            ProcessDialogQueue(dialogQueue = dialogQueue)
         }
+    }
+}
+
+@Composable
+fun ProcessDialogQueue(
+    dialogQueue: Queue<GenericDialogInfo>
+) {
+    dialogQueue.peek()?.let {
+        GenericDialog(
+            dialogInfo = GenericDialogInfo.Builder()
+                .onDismiss { it.onDismiss }
+                .title(it.title)
+                .description(it.description)
+                .positiveAction(it.positiveAction)
+                .negativeAction(it.negativeAction)
+                .build()
+        )
     }
 }

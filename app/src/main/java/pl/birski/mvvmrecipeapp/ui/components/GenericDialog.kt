@@ -122,17 +122,17 @@ class GenericDialogInfo private constructor(builder: Builder) {
             return this
         }
 
-        fun description(description: String): Builder {
+        fun description(description: String?): Builder {
             this.description = description
             return this
         }
 
-        fun positiveAction(positiveAction: PositiveAction): Builder {
+        fun positiveAction(positiveAction: PositiveAction?): Builder {
             this.positiveAction = positiveAction
             return this
         }
 
-        fun negativeAction(negativeAction: NegativeAction): Builder {
+        fun negativeAction(negativeAction: NegativeAction?): Builder {
             this.negativeAction = negativeAction
             return this
         }

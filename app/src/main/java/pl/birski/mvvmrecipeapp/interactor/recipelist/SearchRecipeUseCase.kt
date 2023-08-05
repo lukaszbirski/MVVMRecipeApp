@@ -20,6 +20,12 @@ class SearchRecipeUseCase(
         emit(DataState.loading())
 
         // todo @lukasz check if there is internet connection
+
+        // todo this is for learning purpose only
+        if (params.query == "Error") {
+            throw Exception("Search FAILED!")
+        }
+
         val recipes = recipeRepository.search(page = params.page, query = params.query)
 
         recipeDao.insertRecipes(recipes.map { it.toRecipeEntity() })

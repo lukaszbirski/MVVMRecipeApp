@@ -2,6 +2,7 @@ package pl.birski.mvvmrecipeapp.ui.recipe
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
@@ -22,6 +23,7 @@ fun RecipeDetailScreen(
 ) {
     val loading = viewModel.loading.value
     val recipe = viewModel.recipe.value
+    val dialogQueue = viewModel.dialogQueue
     val scaffoldState = rememberScaffoldState()
     val scrollState = rememberScrollState()
 
@@ -35,16 +37,15 @@ fun RecipeDetailScreen(
 
     AppTheme(
         darkTheme = isDarkTheme,
-        displayProgressBar = loading
+        displayProgressBar = loading,
+        dialogQueue = dialogQueue.queue.value
     ) {
         Scaffold(
             scaffoldState = scaffoldState,
-            snackbarHost = {
-                scaffoldState.snackbarHostState
-            }
-        ) {
+            snackbarHost = { scaffoldState.snackbarHostState }
+        ) { paddingValue ->
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().padding(paddingValue)
             ) {
                 if (loading && recipe == null) {
                     ShimmerRecipeDetails(imageHeight = IMAGE_HEIGHT.dp)
