@@ -14,13 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GenericDialog(
+fun GenericDialog(dialogInfo: GenericDialogInfo, modifier: Modifier = Modifier) {
+    GenericDialog(
+        modifier = modifier,
+        onDismiss = dialogInfo.onDismiss,
+        title = dialogInfo.title,
+        description = dialogInfo.description,
+        positiveAction = dialogInfo.positiveAction,
+        negativeAction = dialogInfo.negativeAction
+    )
+}
+
+@Composable
+private fun GenericDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
     title: String,
     description: String? = null,
-    positiveAction: PositiveAction? = null,
-    negativeAction: NegativeAction? = null,
+    positiveAction: PositiveAction?,
+    negativeAction: NegativeAction?,
 ) {
     AlertDialog(
         modifier = modifier,
@@ -65,3 +77,66 @@ data class NegativeAction(
     val negativeBtnText: String,
     val onNegativeAction: () -> Unit,
 )
+
+class GenericDialogInfo private constructor(builder: Builder) {
+
+    val title: String
+    val onDismiss: () -> Unit
+    val description: String?
+    val positiveAction: PositiveAction?
+    val negativeAction: NegativeAction?
+
+    init {
+        if (builder.title == null) { throw Exception("GenericDialog title cannot be null.") }
+        if (builder.onDismiss == null) { throw Exception("GenericDialog onDismiss function cannot be null.") }
+        this.title = builder.title!!
+        this.onDismiss = builder.onDismiss!!
+        this.description = builder.description
+        this.positiveAction = builder.positiveAction
+        this.negativeAction = builder.negativeAction
+    }
+
+    class Builder {
+        var title: String? = null
+            private set
+
+        var onDismiss: (() -> Unit)? = null
+            private set
+
+        var description: String? = null
+            private set
+
+        var positiveAction: PositiveAction? = null
+            private set
+
+        var negativeAction: NegativeAction? = null
+            private set
+
+        fun title(title: String): Builder {
+            this.title = title
+            return this
+        }
+
+        fun onDismiss(onDismiss: () -> Unit): Builder {
+            this.onDismiss = onDismiss
+            return this
+        }
+
+        fun description(description: String): Builder {
+            this.description = description
+            return this
+        }
+
+        fun positiveAction(positiveAction: PositiveAction): Builder {
+            this.positiveAction = positiveAction
+            return this
+        }
+
+        fun negativeAction(negativeAction: NegativeAction): Builder {
+            this.negativeAction = negativeAction
+            return this
+        }
+
+        fun build() = GenericDialogInfo(this)
+    }
+}
