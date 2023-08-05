@@ -14,6 +14,7 @@ import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
 import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipeUseCase
 import pl.birski.mvvmrecipeapp.ui.util.DialogQueue
+import pl.birski.mvvmrecipeapp.ui.util.InternetConnectionManager
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
@@ -27,7 +28,8 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val searchRecipeUseCase: SearchRecipeUseCase,
-    private val restoreRecipeUseCase: RestoreRecipeUseCase
+    private val restoreRecipeUseCase: RestoreRecipeUseCase,
+    private val internetConnectionManager: InternetConnectionManager
 ) : ViewModel() {
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
@@ -88,12 +90,14 @@ class RecipeListViewModel @Inject constructor(
     private fun newSearch() {
         resetStateSearch()
         searchRecipeUseCase.invoke(
-            SearchRecipeUseCase.Params(page = page.value, query = query.value)
+            SearchRecipeUseCase.Params(
+                page = page.value,
+                query = query.value,
+                isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value
+            )
         ).onEach {
             loading.value = it.loading
-            it.data?.let { list ->
-                recipes.value = list
-            }
+            it.data?.let { list -> recipes.value = list }
             it.error?.let { error ->
                 dialogQueue.appendErrorMessage("Error", error)
                 Log.e(TAG, "newSearch: $error")
@@ -106,15 +110,17 @@ class RecipeListViewModel @Inject constructor(
             incrementPage()
             if (page.value > 1) {
                 searchRecipeUseCase.invoke(
-                    SearchRecipeUseCase.Params(page = page.value, query = query.value)
+                    SearchRecipeUseCase.Params(
+                        page = page.value,
+                        query = query.value,
+                        isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value
+                    )
                 ).onEach {
                     loading.value = it.loading
-                    it.data?.let { list ->
-                        appendRecipes(list)
-                    }
+                    it.data?.let { list -> appendRecipes(list) }
                     it.error?.let { error ->
                         Log.e(TAG, "nextPage: $error")
-                        // todo @lukasz handle error
+                        dialogQueue.appendErrorMessage("Error", error)
                     }
                 }.launchIn(viewModelScope)
             }

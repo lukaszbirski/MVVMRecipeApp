@@ -18,6 +18,7 @@ const val IMAGE_HEIGHT = 260
 @Composable
 fun RecipeDetailScreen(
     isDarkTheme: Boolean,
+    isNetworkAvailable: Boolean,
     recipeId: Int?,
     viewModel: RecipeViewModel
 ) {
@@ -37,6 +38,7 @@ fun RecipeDetailScreen(
 
     AppTheme(
         darkTheme = isDarkTheme,
+        isNetworkAvailable = isNetworkAvailable,
         displayProgressBar = loading,
         dialogQueue = dialogQueue.queue.value
     ) {

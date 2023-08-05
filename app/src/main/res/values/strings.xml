@@ -16,4 +16,5 @@
     <string name="donut_text">Donut</string>
     <string name="update_by_text">By %1$s</string>
     <string name="updated_text">Updated %1$s by %2$s</string>
+    <string name="no_network_connection_text">No Network Connection</string>
 </resources>

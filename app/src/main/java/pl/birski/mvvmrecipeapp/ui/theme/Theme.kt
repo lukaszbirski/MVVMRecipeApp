@@ -3,6 +3,7 @@ package pl.birski.mvvmrecipeapp.ui.theme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import pl.birski.mvvmrecipeapp.ui.components.CircularProgressBar
+import pl.birski.mvvmrecipeapp.ui.components.ConnectivityMonitor
 import pl.birski.mvvmrecipeapp.ui.components.GenericDialog
 import pl.birski.mvvmrecipeapp.ui.components.GenericDialogInfo
 import java.util.Queue
@@ -46,6 +48,7 @@ private val DarkThemeColors = darkColors(
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    isNetworkAvailable: Boolean,
     displayProgressBar: Boolean,
     dialogQueue: Queue<GenericDialogInfo>,
     content: @Composable () -> Unit
@@ -66,7 +69,10 @@ fun AppTheme(
                 .fillMaxSize()
                 .background(color = if (!darkTheme) Grey1 else Color.Black)
         ) {
-            content()
+            Column {
+                ConnectivityMonitor(isNetworkAvailable = isNetworkAvailable)
+                content()
+            }
             CircularProgressBar(isDisplayed = displayProgressBar, 0.3f)
             ProcessDialogQueue(dialogQueue = dialogQueue)
         }

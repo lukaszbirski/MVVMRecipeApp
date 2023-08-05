@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.recipedetails.GetRecipeUseCase
 import pl.birski.mvvmrecipeapp.ui.util.DialogQueue
+import pl.birski.mvvmrecipeapp.ui.util.InternetConnectionManager
 import pl.birski.mvvmrecipeapp.util.TAG
 import javax.inject.Inject
 
@@ -21,7 +22,8 @@ const val STATE_KEY_RECIPE = "recipe.state.key.selected_recipeId"
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val getRecipeUseCase: GetRecipeUseCase
+    private val getRecipeUseCase: GetRecipeUseCase,
+    private val internetConnectionManager: InternetConnectionManager
 ) : ViewModel() {
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
@@ -52,7 +54,12 @@ class RecipeViewModel @Inject constructor(
     }
 
     private fun getRecipe(id: Int) {
-        getRecipeUseCase.invoke(GetRecipeUseCase.Params(recipeId = id)).onEach {
+        getRecipeUseCase.invoke(
+            GetRecipeUseCase.Params(
+                recipeId = id,
+                isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value
+            )
+        ).onEach {
             loading.value = it.loading
             it.data?.let { recipe ->
                 this.recipe.value = recipe

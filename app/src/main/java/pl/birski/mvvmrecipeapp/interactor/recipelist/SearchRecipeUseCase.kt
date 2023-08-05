@@ -19,16 +19,15 @@ class SearchRecipeUseCase(
     override fun action(params: Params): Flow<DataState<List<Recipe>>> = flow {
         emit(DataState.loading())
 
-        // todo @lukasz check if there is internet connection
-
         // todo this is for learning purpose only
         if (params.query == "Error") {
             throw Exception("Search FAILED!")
         }
 
-        val recipes = recipeRepository.search(page = params.page, query = params.query)
-
-        recipeDao.insertRecipes(recipes.map { it.toRecipeEntity() })
+        if (params.isNetworkAvailable) {
+            val recipes = recipeRepository.search(page = params.page, query = params.query)
+            recipeDao.insertRecipes(recipes.map { it.toRecipeEntity() })
+        }
 
         val cacheResult = if (params.query.isBlank()) {
             recipeDao.getAllRecipes(
@@ -45,5 +44,5 @@ class SearchRecipeUseCase(
         emit(DataState.success(cacheResult.map { it.toDomain() }))
     }
 
-    data class Params(val page: Int, val query: String)
+    data class Params(val page: Int, val query: String, val isNetworkAvailable: Boolean)
 }

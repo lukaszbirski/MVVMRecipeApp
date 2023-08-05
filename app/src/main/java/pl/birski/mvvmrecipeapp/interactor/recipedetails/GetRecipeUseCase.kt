@@ -18,16 +18,20 @@ class GetRecipeUseCase(
     override fun action(params: Params): Flow<DataState<Recipe>> = flow {
         emit(DataState.loading())
 
-        val recipe = recipeDao.getRecipeById(params.recipeId)?.toDomain()
+        var recipe = recipeDao.getRecipeById(params.recipeId)?.toDomain()
 
         if (recipe != null) {
             emit(DataState(recipe))
         } else {
-            val networkRecipe = recipeRepository.get(params.recipeId)
-            recipeDao.insertRecipe(networkRecipe.toRecipeEntity())
-            emit(DataState(networkRecipe))
+            if (params.isNetworkAvailable) {
+                val networkRecipe = recipeRepository.get(params.recipeId)
+                recipeDao.insertRecipe(networkRecipe.toRecipeEntity())
+            }
+
+            recipe = recipeDao.getRecipeById(id = params.recipeId)?.toDomain()
+            recipe?.let { emit(DataState(it)) } ?: throw Exception("Unable to get recipe from the cache.")
         }
     }
 
-    data class Params(val recipeId: Int)
+    data class Params(val recipeId: Int, val isNetworkAvailable: Boolean)
 }
