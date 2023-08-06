@@ -9,9 +9,9 @@ import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.BaseUseCase
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 
-class RestoreRecipeUseCase(
+class RestoreRecipesUseCase(
     private val recipeDao: RecipeDao
-) : BaseUseCase<RestoreRecipeUseCase.Params, List<Recipe>>() {
+) : BaseUseCase<RestoreRecipesUseCase.Params, List<Recipe>>() {
 
     override fun action(params: Params): Flow<DataState<List<Recipe>>> = flow {
         emit(DataState.loading())

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
-import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
+import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipesUseCase
 import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipesUseCase
 import pl.birski.mvvmrecipeapp.ui.util.DialogQueue
 import pl.birski.mvvmrecipeapp.ui.util.InternetConnectionManager
@@ -28,7 +28,7 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val searchRecipesUseCase: SearchRecipesUseCase,
-    private val restoreRecipeUseCase: RestoreRecipeUseCase,
+    private val restoreRecipesUseCase: RestoreRecipesUseCase,
     private val internetConnectionManager: InternetConnectionManager
 ) : ViewModel() {
 
@@ -73,8 +73,8 @@ class RecipeListViewModel @Inject constructor(
     }
 
     private fun restoreState() {
-        restoreRecipeUseCase.invoke(
-            RestoreRecipeUseCase.Params(page = page.value, query = query.value)
+        restoreRecipesUseCase.invoke(
+            RestoreRecipesUseCase.Params(page = page.value, query = query.value)
         ).onEach {
             loading.value = it.loading
             it.data?.let { list ->

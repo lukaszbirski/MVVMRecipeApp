@@ -7,7 +7,7 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import pl.birski.mvvmrecipeapp.cache.database.AppDatabase
 import pl.birski.mvvmrecipeapp.interactor.recipedetails.GetRecipeUseCase
-import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
+import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipesUseCase
 import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipesUseCase
 import pl.birski.mvvmrecipeapp.network.service.RecipeService
 
@@ -23,7 +23,7 @@ object InteractorModule {
     @ViewModelScoped
     @Provides
     fun provideRestoreRecipeUseCase(db: AppDatabase) =
-        RestoreRecipeUseCase(recipeDao = db.recipeDao())
+        RestoreRecipesUseCase(recipeDao = db.recipeDao())
 
     @ViewModelScoped
     @Provides
