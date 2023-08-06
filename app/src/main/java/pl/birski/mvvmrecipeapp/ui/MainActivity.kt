@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import pl.birski.mvvmrecipeapp.datastore.SettingsDataStore
 import pl.birski.mvvmrecipeapp.ui.navigation.Screen
 import pl.birski.mvvmrecipeapp.ui.recipe.RecipeDetailScreen
 import pl.birski.mvvmrecipeapp.ui.recipelist.RecipeListScreen
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var internetConnectionManager: InternetConnectionManager
+
+    @Inject
+    lateinit var settingsDataStore: SettingsDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +67,9 @@ class MainActivity : AppCompatActivity() {
             route = Screen.RecipeList.route
         ) {
             RecipeListScreen(
-                isDarkTheme = (application as BaseApplication).isDark.value,
+                isDarkTheme = settingsDataStore.isDark.value,
                 isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value,
-                onToggleTheme = { (application as BaseApplication)::toggleLightTheme },
+                onToggleTheme = { settingsDataStore.toggleTheme() },
                 onNavigateToRecipeDetailScreen = {
                     val route = Screen.RecipeDetail.route + "/${it.id}"
                     navController.navigate(route)
@@ -81,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             arguments = Screen.RecipeDetail.arguments
         ) {
             RecipeDetailScreen(
-                isDarkTheme = (application as BaseApplication).isDark.value,
+                isDarkTheme = settingsDataStore.isDark.value,
                 isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value,
                 recipeId = it.arguments?.getInt("recipeId"),
                 viewModel = hiltViewModel()
