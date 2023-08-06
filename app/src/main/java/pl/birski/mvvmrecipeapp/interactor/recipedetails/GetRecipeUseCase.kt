@@ -2,17 +2,18 @@ package pl.birski.mvvmrecipeapp.interactor.recipedetails
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import pl.birski.mvvmrecipeapp.BuildConfig
 import pl.birski.mvvmrecipeapp.cache.RecipeDao
 import pl.birski.mvvmrecipeapp.domain.data.DataState
 import pl.birski.mvvmrecipeapp.domain.mapper.toDomain
 import pl.birski.mvvmrecipeapp.domain.mapper.toRecipeEntity
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.BaseUseCase
-import pl.birski.mvvmrecipeapp.repository.RecipeRepository
+import pl.birski.mvvmrecipeapp.network.service.RecipeService
 
 class GetRecipeUseCase(
     private val recipeDao: RecipeDao,
-    private val recipeRepository: RecipeRepository
+    private val recipeService: RecipeService
 ) : BaseUseCase<GetRecipeUseCase.Params, Recipe>() {
 
     override fun action(params: Params): Flow<DataState<Recipe>> = flow {
@@ -24,8 +25,8 @@ class GetRecipeUseCase(
             emit(DataState(recipe))
         } else {
             if (params.isNetworkAvailable) {
-                val networkRecipe = recipeRepository.get(params.recipeId)
-                recipeDao.insertRecipe(networkRecipe.toRecipeEntity())
+                val recipe = recipeService.get(token = BuildConfig.TOKEN, params.recipeId).toDomain()
+                recipeDao.insertRecipe(recipe.toRecipeEntity())
             }
 
             recipe = recipeDao.getRecipeById(id = params.recipeId)?.toDomain()

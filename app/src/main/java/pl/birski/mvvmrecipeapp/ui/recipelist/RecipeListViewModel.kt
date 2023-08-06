@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
-import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipeUseCase
+import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipesUseCase
 import pl.birski.mvvmrecipeapp.ui.util.DialogQueue
 import pl.birski.mvvmrecipeapp.ui.util.InternetConnectionManager
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
@@ -27,7 +27,7 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val searchRecipeUseCase: SearchRecipeUseCase,
+    private val searchRecipesUseCase: SearchRecipesUseCase,
     private val restoreRecipeUseCase: RestoreRecipeUseCase,
     private val internetConnectionManager: InternetConnectionManager
 ) : ViewModel() {
@@ -89,8 +89,8 @@ class RecipeListViewModel @Inject constructor(
 
     private fun newSearch() {
         resetStateSearch()
-        searchRecipeUseCase.invoke(
-            SearchRecipeUseCase.Params(
+        searchRecipesUseCase.invoke(
+            SearchRecipesUseCase.Params(
                 page = page.value,
                 query = query.value,
                 isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value
@@ -109,8 +109,8 @@ class RecipeListViewModel @Inject constructor(
         if ((recipeListScrollPosition + 1) >= (page.value * RECIPE_PAGINATION_PAGE_SIZE)) {
             incrementPage()
             if (page.value > 1) {
-                searchRecipeUseCase.invoke(
-                    SearchRecipeUseCase.Params(
+                searchRecipesUseCase.invoke(
+                    SearchRecipesUseCase.Params(
                         page = page.value,
                         query = query.value,
                         isNetworkAvailable = internetConnectionManager.isNetworkAvailable.value

@@ -8,8 +8,8 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import pl.birski.mvvmrecipeapp.cache.database.AppDatabase
 import pl.birski.mvvmrecipeapp.interactor.recipedetails.GetRecipeUseCase
 import pl.birski.mvvmrecipeapp.interactor.recipelist.RestoreRecipeUseCase
-import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipeUseCase
-import pl.birski.mvvmrecipeapp.repository.RecipeRepository
+import pl.birski.mvvmrecipeapp.interactor.recipelist.SearchRecipesUseCase
+import pl.birski.mvvmrecipeapp.network.service.RecipeService
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -17,8 +17,8 @@ object InteractorModule {
 
     @ViewModelScoped
     @Provides
-    fun provideSearchRecipeUseCase(db: AppDatabase, recipeRepository: RecipeRepository) =
-        SearchRecipeUseCase(recipeDao = db.recipeDao(), recipeRepository = recipeRepository)
+    fun provideSearchRecipeUseCase(db: AppDatabase, recipeService: RecipeService) =
+        SearchRecipesUseCase(recipeDao = db.recipeDao(), recipeService = recipeService)
 
     @ViewModelScoped
     @Provides
@@ -27,6 +27,6 @@ object InteractorModule {
 
     @ViewModelScoped
     @Provides
-    fun provideGetRecipeUseCase(db: AppDatabase, recipeRepository: RecipeRepository) =
-        GetRecipeUseCase(recipeDao = db.recipeDao(), recipeRepository = recipeRepository)
+    fun provideGetRecipeUseCase(db: AppDatabase, recipeService: RecipeService) =
+        GetRecipeUseCase(recipeDao = db.recipeDao(), recipeService = recipeService)
 }
