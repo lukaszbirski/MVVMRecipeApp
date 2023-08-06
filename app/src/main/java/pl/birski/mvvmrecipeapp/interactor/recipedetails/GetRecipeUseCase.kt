@@ -10,6 +10,7 @@ import pl.birski.mvvmrecipeapp.domain.mapper.toRecipeEntity
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.BaseUseCase
 import pl.birski.mvvmrecipeapp.network.service.RecipeService
+import pl.birski.mvvmrecipeapp.util.DateUtil
 
 class GetRecipeUseCase(
     private val recipeDao: RecipeDao,
@@ -25,8 +26,9 @@ class GetRecipeUseCase(
             emit(DataState(recipe))
         } else {
             if (params.isNetworkAvailable) {
-                val recipe = recipeService.get(token = BuildConfig.TOKEN, params.recipeId).toDomain()
-                recipeDao.insertRecipe(recipe.toRecipeEntity())
+                val newRecipe = recipeService.get(token = BuildConfig.TOKEN, params.recipeId).toDomain()
+                val currentDate = DateUtil.createTimestamp()
+                recipeDao.insertRecipe(newRecipe.toRecipeEntity(currentDate))
             }
 
             recipe = recipeDao.getRecipeById(id = params.recipeId)?.toDomain()

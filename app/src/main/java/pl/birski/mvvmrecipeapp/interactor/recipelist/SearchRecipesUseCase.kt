@@ -10,6 +10,7 @@ import pl.birski.mvvmrecipeapp.domain.mapper.toRecipeEntity
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.interactor.BaseUseCase
 import pl.birski.mvvmrecipeapp.network.service.RecipeService
+import pl.birski.mvvmrecipeapp.util.DateUtil
 import pl.birski.mvvmrecipeapp.util.RECIPE_PAGINATION_PAGE_SIZE
 
 class SearchRecipesUseCase(
@@ -31,7 +32,8 @@ class SearchRecipesUseCase(
                 page = params.page,
                 query = params.query
             ).recipes.map { it.toDomain() }
-            recipeDao.insertRecipes(recipes.map { it.toRecipeEntity() })
+            val currentDate = DateUtil.createTimestamp()
+            recipeDao.insertRecipes(recipes.map { it.toRecipeEntity(currentDate) })
         }
 
         val cacheResult = if (params.query.isBlank()) {

@@ -4,6 +4,7 @@ import pl.birski.mvvmrecipeapp.cache.model.RecipeEntity
 import pl.birski.mvvmrecipeapp.domain.model.Recipe
 import pl.birski.mvvmrecipeapp.network.model.RecipeDTO
 import pl.birski.mvvmrecipeapp.util.DateUtil
+import java.util.Date
 
 fun RecipeDTO.toDomain() = Recipe(
     id = this.pk,
@@ -29,7 +30,7 @@ fun RecipeEntity.toDomain() = Recipe(
     dateUpdated = this.dateUpdated
 )
 
-fun Recipe.toRecipeEntity() = RecipeEntity(
+fun Recipe.toRecipeEntity(dateCached: Date) = RecipeEntity(
     id = this.id,
     title = this.title,
     publisher = this.publisher,
@@ -39,5 +40,5 @@ fun Recipe.toRecipeEntity() = RecipeEntity(
     ingredients = this.ingredients,
     dateAdded = this.dateAdded,
     dateUpdated = this.dateUpdated,
-    dateCached = DateUtil.createTimestamp()
+    dateCached = dateCached
 )
